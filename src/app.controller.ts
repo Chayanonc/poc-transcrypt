@@ -22,7 +22,14 @@ export class AppController {
     @Body()
     body: IOrder,
   ) {
-    return await this.appService.createOrder(body);
+    const arr = [];
+    for (let i = 0; i < 3; i++) {
+      arr.push(this.appService.createOrder(body));
+    }
+
+    const result = await Promise.all(arr);
+
+    return result;
   }
 
   @Post('/confirm-tx')

@@ -4,8 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './entities/user.entity';
 import { Transaction } from './entities/tx.entity';
-import { BullModule } from '@nestjs/bull';
-import { OrderProcessor } from './app.processor';
+import { TransactionModule } from './modules/transaction/transaction.module';
 
 @Module({
   imports: [
@@ -20,22 +19,9 @@ import { OrderProcessor } from './app.processor';
       logging: true,
     }),
     TypeOrmModule.forFeature([User, Transaction]),
-    BullModule.forRoot({
-      redis: {
-        host: 'localhost',
-        port: 6379,
-      },
-      limiter: {
-        max: 1,
-        duration: 1000,
-        bounceBack: false,
-      },
-    }),
-    BullModule.registerQueue({
-      name: 'createOrder',
-    }),
+    TransactionModule,
   ],
   controllers: [AppController],
-  providers: [AppService, OrderProcessor],
+  providers: [AppService],
 })
 export class AppModule {}

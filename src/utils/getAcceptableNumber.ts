@@ -7,13 +7,6 @@ export const calAcceptAmount = (
 ) => {
   const amountUnit = ethers.parseUnits(amount);
 
-  console.log({
-    amountUnit: BigInt(amountUnit),
-    orderNumber: BigInt(orderNumber),
-    sum: BigInt(amountUnit) + BigInt(orderNumber),
-    eth: ethers.formatUnits(BigInt(amountUnit) + BigInt(orderNumber)),
-  });
-
   switch (tokenDecimal) {
     case 8:
       break;

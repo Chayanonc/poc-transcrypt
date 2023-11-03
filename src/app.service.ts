@@ -20,9 +20,7 @@ export class AppService {
     private readonly userRepository: MongoRepository<User>,
 
     @InjectRepository(Transaction)
-    private readonly txRepository: MongoRepository<Transaction>,
-
-    @InjectQueue('createOrder') private orderQueue: Queue,
+    private readonly txRepository: MongoRepository<Transaction>, // @InjectQueue('createOrder') private orderQueue: Queue,
   ) {}
 
   getHello(): string {
@@ -40,78 +38,93 @@ export class AppService {
   async createOrder(body: IOrder) {
     const { amount, chainId, merchantAddr, tokenAddr } = body;
 
-    const start = new Date();
-    start.setUTCHours(0, 0, 0, 0);
+    // const start = new Date();
+    // start.setUTCHours(0, 0, 0, 0);
 
-    const end = new Date();
-    end.setUTCHours(23, 59, 59, 999);
+    // const end = new Date();
+    // end.setUTCHours(23, 59, 59, 999);
 
-    const findLastOrder = await this.txRepository.findAndCount({
-      where: {
-        merchantAddress: merchantAddr,
-        tokenAdress: tokenAddr,
-        chainId,
-        createdAt: {
-          $gte: new Date(start.getTime()),
-          $lt: new Date(end.getTime()),
-        },
-      },
-    });
+    // const findLastOrder = await this.txRepository.findAndCount({
+    //   where: {
+    //     merchantAddress: merchantAddr,
+    //     tokenAdress: tokenAddr,
+    //     chainId,
+    //     createdAt: {
+    //       $gte: new Date(start.getTime()),
+    //       $lt: new Date(end.getTime()),
+    //     },
+    //   },
+    // });
 
-    const orderNumber = findLastOrder[1] + 1;
+    // const orderNumber = findLastOrder[1] + 1;
 
-    const newAmount = calAcceptAmount(amount, 18, orderNumber);
+    const jobId = await this.createOrderJob(merchantAddr, tokenAddr, chainId);
 
-    const eip681Native = formatEIP681.ethPayment(merchantAddr, newAmount);
-    const eip681Token = formatEIP681.erc20Transfer(
-      tokenAddr,
-      merchantAddr,
-      newAmount,
-      chainId,
-    );
+    // const getJob = await this.orderQueue.getJob(jobId);
 
-    const qrNative = await qrcode.toString(eip681Native);
-    const qrToken = await qrcode.toString(eip681Token);
+    // console.log({ getJob });
 
-    console.log({ qrNative, qrToken });
+    // const newAmount = calAcceptAmount(amount, 18, orderNumber);
 
-    if (!newAmount) {
-      return new Error('Token limit');
-    }
+    // const eip681Native = formatEIP681.ethPayment(merchantAddr, newAmount);
+    // const eip681Token = formatEIP681.erc20Transfer(
+    //   tokenAddr,
+    //   merchantAddr,
+    //   newAmount,
+    //   chainId,
+    // );
 
-    const job = await this.orderQueue.add(
-      'alice',
-      {
-        name: 'alice',
-      },
-      {
-        delay: 2000,
-        timeout: 10000,
-        removeOnComplete: true,
-      },
-    );
+    // const qrNative = await qrcode.toString(eip681Native);
+    // const qrToken = await qrcode.toString(eip681Token);
 
-    const jobIscomplete = await job.isCompleted();
+    // // console.log({ qrNative, qrToken });
 
-    // console.log({ jobIscomplete });
+    // if (!newAmount) {
+    //   return new Error('Token limit');
+    // }
 
-    const tx = this.txRepository.create({
-      tokenAmount: amount,
-      chainId: chainId,
-      exchangeRate: '30',
-      status: txStatus.PENDING,
-      merchantAddress: merchantAddr,
-      tokenAdress: tokenAddr,
-      runningNumber: orderNumber,
-    });
+    // // console.log({ jobIscomplete });
 
-    try {
-      return await this.txRepository.save(tx);
-    } catch (error) {
-      return error;
-    }
+    // const tx = this.txRepository.create({
+    //   tokenAmount: amount,
+    //   chainId: chainId,
+    //   exchangeRate: '30',
+    //   status: txStatus.PENDING,
+    //   merchantAddress: merchantAddr,
+    //   tokenAdress: tokenAddr,
+    //   runningNumber: orderNumber,
+    // });
 
-    return tx;
+    // try {
+    //   const result = await this.txRepository.save(tx);
+    //   return result.runningNumber;
+    // } catch (error) {
+    //   return error;
+    // }
+
+    return '';
+  }
+
+  async createOrderJob(
+    merchantAddr: string,
+    tokenAddr: string,
+    chainId: number,
+  ) {
+    // const job = await this.orderQueue.add(
+    //   'orderQ',
+    //   {
+    //     merchantAddr,
+    //     tokenAddr,
+    //     chainId,
+    //   },
+    //   {
+    //     delay: 3000,
+    //     timeout: 10000,
+    //     removeOnComplete: true,
+    //     removeOnFail: true,
+    //   },
+    // );
+    // return job.id;
   }
 
   async confirmTransaction(body: any) {

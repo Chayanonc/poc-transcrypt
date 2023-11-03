@@ -1,0 +1,51 @@
+export const tokens = [
+  {
+    chainId: 25925,
+    address: '0xffB7f24062ef85D7Ef62561d2D8B90c857ED19Ea',
+    decimals: 18,
+    symbol: 'CAKE',
+    name: 'CAKE',
+  },
+  {
+    chainId: 25925,
+    address: '0xD206487889849a4Dc6d5E366AC71BD7b85041074',
+    decimals: 18,
+    symbol: 'LP1-TOKEN1',
+    name: 'LP1-TOKEN1',
+  },
+  {
+    chainId: 25925,
+    address: '0xD206487889849a4Dc6d5E366AC71BD7b85041074',
+    decimals: 18,
+    symbol: 'LP1-TOKEN2',
+    name: 'LP1-TOKEN2',
+  },
+  {
+    chainId: 25925,
+    address: '0x05D29BA57dE7Ff4be081e8aC41DBD31F5C42Cc9c',
+    decimals: 18,
+    symbol: 'LP2-TOKEN1',
+    name: 'LP2-TOKEN1',
+  },
+  {
+    chainId: 25925,
+    address: '0x05D29BA57dE7Ff4be081e8aC41DBD31F5C42Cc9c',
+    decimals: 18,
+    symbol: 'LP2-TOKEN2',
+    name: 'LP2-TOKEN2',
+  },
+  {
+    chainId: 25925,
+    address: '0x7BA145e79DbEeC3569bEbfa2Cc548b150fa7FA51',
+    decimals: 18,
+    symbol: 'LP3-TOKEN1',
+    name: 'LP3-TOKEN1',
+  },
+  {
+    chainId: 25925,
+    address: '0x7BA145e79DbEeC3569bEbfa2Cc548b150fa7FA51',
+    decimals: 18,
+    symbol: 'LP3-TOKEN2',
+    name: 'LP3-TOKEN2',
+  },
+];
